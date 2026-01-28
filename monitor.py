@@ -5,9 +5,10 @@ from playwright.sync_api import sync_playwright
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 
-# 用一个【确定有货】的商品来验证
-NAME = "Astrox 100ZZ Kurenai (TEST)"
-URL = "https://vsmash.com/product/yonex-astrox-100zz-kurenai"
+PRODUCTS = {
+    "Astrox 100ZZ Dark Navy": "https://vsmash.com/product/yonex-astrox-100zz-dark-navy",
+    "Astrox 100VA ZZ Grayish Beige": "https://vsmash.com/product/yonex-astrox-100va-zz-grayish-beige",
+}
 
 def send_telegram(msg):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
@@ -21,16 +22,20 @@ with sync_playwright() as p:
     )
     page = browser.new_page()
 
-    page.goto(URL, timeout=60000)
-    page.wait_for_timeout(4000)
+    for name, url in PRODUCTS.items():
+        page.goto(url, timeout=60000)
+        page.wait_for_timeout(4000)
 
-    buttons = page.query_selector_all("#productDetail button")
+        buttons = page.query_selector_all("#productDetail button")
 
-    for btn in buttons:
-        if not btn.is_disabled():
-            html = btn.inner_html().lower()
-            if "bag" in html or "checkout" in html or "add" in html:
-                send_telegram(f"✅【验证成功】{NAME} 检测为有货\n{URL}")
-                break
+        for btn in buttons:
+            if not btn.is_disabled():
+                html = btn.inner_html().lower()
+
+                if "bag" in html or "checkout" in html or "add" in html:
+                    send_telegram(
+                        f"🔥【有货提醒】\n{name}\n{url}"
+                    )
+                    break  # 同一个商品一次 run 只推一条
 
     browser.close()
