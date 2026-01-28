@@ -1,8 +1,0 @@
-services:
-  - type: worker
-    name: vsmash-monitor
-    env: python
-    plan: free
-    buildCommand: |
-      pip install -r requirements.txt
-    startCommand: python monitor.py
