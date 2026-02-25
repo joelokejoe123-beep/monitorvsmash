@@ -8,6 +8,7 @@ CHAT_ID = os.getenv("CHAT_ID")
 PRODUCTS = {
     "Astrox 100ZZ Dark Navy": "https://vsmash.com/product/yonex-astrox-100zz-dark-navy",
     "Astrox 100VA ZZ Grayish Beige": "https://vsmash.com/product/yonex-astrox-100va-zz-grayish-beige",
+    "Yonex Power Cushion 65Z4 Men BR White": "https://vsmash.com/product/yonex-power-cushion-65z4-men-br-white",
 }
 
 def send_telegram(msg):
